@@ -1,0 +1,29 @@
+version: '3.8' # Use a recent Docker Compose version
+
+services:
+  fikadevbot:
+    build: . # Build the image from the Dockerfile in the current directory
+    container_name: fikadevbot_app
+    restart: unless-stopped # Always restart unless explicitly stopped
+
+    # Map port 3000 from the container to port 3000 on your host machine
+    ports:
+      - "3000:3000"
+
+    # Load environment variables from the .env file in the host's root directory
+    env_file:
+      - .env
+
+    # Mount the current directory into the container.
+    # This is great for development: changes on your host machine are reflected instantly in the container
+    # without rebuilding the image.
+    volumes:
+      - ./charts:/app/charts
+      - .:/app
+    
+    # You can add healthchecks here if your app has an endpoint to check its health
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3

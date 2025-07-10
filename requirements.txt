@@ -1,0 +1,9 @@
+langchain>=0.1.0
+langgraph
+slack_bolt
+requests
+matplotlib
+python-dotenv
+sqlite-utils
+langchain-openai
+langchain-core
