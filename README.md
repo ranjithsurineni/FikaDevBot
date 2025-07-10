@@ -22,8 +22,9 @@ Our mission: "Turn raw GitHub data into actionable engineering insights — deli
     *   [Slack App Configuration](#slack-app-configuration)
 5.  [Project Structure](#project-structure)
 6.  [Usage](#usage)
-7.  [Contributing](#contributing)
-8.  [License](#license)
+7.  [Expected Output](#Expected-Output)
+8.  [Contributing](#contributing)
+9.  [License](#license)
 
 ---
 
@@ -79,14 +80,12 @@ FikaDevBot employs a modular, agent-based architecture designed for clarity and 
 |    Slack Bot     |  <-- /dev-report triggers summary
 +------------------+
 
-
-
 ```
-
 ---
 
-Flow Breakdown:
-    - **GitHub API:** The primary source of raw development activity data, including commits, pull requests, and associated reviews.
+# Flow Breakdown:
+
+ * GitHub API: The primary source of raw development activity data, including commits, pull requests, and associated reviews.
     - **Data Harvester (`agents/data_harvester.py`):**
         - Connects to the GitHub API via `github_client.py`.
         - Fetches raw commit details (additions, deletions) and pull request data (creation, closure, merge times, and review details).
@@ -117,18 +116,17 @@ Flow Breakdown:
 
 ---
 
-## Technologies Used
-
-    - Python 3.10+
-    - LangGraph: For building and orchestrating the AI agent workflow.
-    - Slack Bolt for Python: For seamless integration with Slack API (slash commands, messages).
-    - Requests: For making HTTP requests to the GitHub API.
-    - python-dotenv: For managing environment variables.
-    - sqlite-utils: A powerful and user-friendly CLI tool and Python library for working with SQLite databases.
-    - Matplotlib: For generating data visualizations (e.g., churn charts).
-    - Docker & Docker Compose (containerization)
-    - Git: Version control.
-    - ngrok (or similar tunneling service): Essential for exposing your local development server to Slack.
+## Technologies Used 
+   * Python 3.10+
+   * LangGraph: For building and orchestrating the AI agent workflow.
+   * Slack Bolt for Python: For seamless integration with Slack API (slash commands, messages).
+   * Requests: For making HTTP requests to the GitHub API.
+   * python-dotenv: For managing environment variables.
+   * sqlite-utils: A powerful and user-friendly CLI tool and Python library for working with SQLite databases.
+   * Matplotlib: For generating data visualizations (e.g., churn charts).
+   * Docker & Docker Compose (containerization)
+   * Git: Version control.
+   * ngrok (or similar tunneling service): Essential for exposing your local development server to Slack.
 
 ---
 
@@ -136,141 +134,147 @@ Flow Breakdown:
 
 Follow these instructions to set up and run FikaDevBot locally.
 
-    # Prerequisites:
-       - Python 3.10 or higher installed.
-       - pip (Python package installer).
-       - A GitHub account with access to a repository for testing.
-       - A Slack workspace where you have permissions to create and manage apps.
-       - ngrok (or a similar tunneling service) installed and authenticated (for local development).
-       - Docker & Docker Compose
+### Prerequisites:
+  * Python 3.10 or higher installed.
+  * pip (Python package installer).
+  * A GitHub account with access to a repository for testing.
+  * A Slack workspace where you have permissions to create and manage apps.
+  * ngrok (or a similar tunneling service) installed and authenticated (for local development).
+  * Docker & Docker Compose
 
 
-
-    # Installation:
-        Clone the repository:
+---
+### Installation:
+---
+   Clone the repository:
+   
 ```bash
-
-            git clone https://github.com/your-username/fika-ai-mvp_2.git 
-            cd fika-ai-mvp_2
+git clone https://github.com/your-username/fika-ai-mvp_2.git 
+cd fika-ai-mvp_2
 ```
 
-        Install Python dependencies:
+Install Python dependencies:
 ```bash
-            pip install -r requirements.txt
+pip install -r requirements.txt
 ```
+---
+### Environment Variables (.env):
 
-    # Environment Variables (.env):
-            Create a .env file in the root of your project directory. This file will store your sensitive API keys and configuration.
+Create a .env file in the root of your project directory. This file will store your sensitive API keys and configuration.
+   
 ```bash
-                # .env example
-                # --- GitHub Configuration ---
-                GITHUB_TOKEN="YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"
-                # Requires 'repo' scope for private repos, or public_repo for public.
-                # Generate at: https://github.com/settings/tokens
+ # .env example
+ # --- GitHub Configuration ---
+ GITHUB_TOKEN="YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"
+ # Requires 'repo' scope for private repos, or public_repo for public.
+ # Generate at: https://github.com/settings/tokens
 
-                # --- Slack Configuration ---
-                SLACK_BOT_TOKEN="xoxb-YOUR_SLACK_BOT_TOKEN"
-                # Found under 'OAuth & Permissions' in your Slack App settings
+ # --- Slack Configuration ---
+ SLACK_BOT_TOKEN="xoxb-YOUR_SLACK_BOT_TOKEN"
+ # Found under 'OAuth & Permissions' in your Slack App settings
 
-                SLACK_SIGNING_SECRET="YOUR_SLACK_SIGNING_SECRET"
-                # Found under 'Basic Information' -> 'App Credentials' in your Slack App settings
+ SLACK_SIGNING_SECRET="YOUR_SLACK_SIGNING_SECRET"
+ # Found under 'Basic Information' -> 'App Credentials' in your Slack App settings
 
-                # --- Database Configuration (SQLite) ---
-                SQLITE_DB_PATH="fika_ai_db.sqlite" # Or any desired path for your SQLite database file
+ # --- Database Configuration (SQLite) ---
+ SQLITE_DB_PATH="fika_ai_db.sqlite" # Or any desired path for your SQLite database file
 
-                # --- Demo Repository (Optional, for LangGraph testing) ---
-                GITHUB_OWNER="octocat"
-                GITHUB_REPO="Hello-World"
+ # --- Demo Repository (Optional, for LangGraph testing) ---
+ GITHUB_OWNER="octocat"
+ GITHUB_REPO="Hello-World"
 
-                                
-                # ---- OpenRouter Configuration ---
-                OPENROUTER_API_KEY=your_openrouter_api_key
-                OPENROUTER_API_BASE=https://openrouter.ai/api/v1
-                OPENROUTER_MODEL_NAME=mistralai/mistral-7b-instruct:free
+                 
+ # ---- OpenRouter Configuration ---
+ OPENROUTER_API_KEY=your_openrouter_api_key
+ OPENROUTER_API_BASE=https://openrouter.ai/api/v1
+ OPENROUTER_MODEL_NAME=mistralai/mistral-7b-instruct:free
 
-                # --- Report Configuration ---
-                REPORT_AUTHOR_NAME=Your Name
-                REPORT_AUTHOR_POSITION=Your Position
+ # --- Report Configuration ---
+ REPORT_AUTHOR_NAME=Your Name
+ REPORT_AUTHOR_POSITION=Your Position
 
 
 ```
-    # Database Setup (SQLite)
+---
+### Database Setup (SQLite)
 
 FikaDevBot uses SQLite, which is a file-based database. No separate server setup is required. The 'sqlite-utils' library will automatically create the database file and tables when the application runs for the first time or when the seeding script is executed.
 
-    - The database file will be created at the path specified by SQLITE_DB_PATH in your .env file (defaults to fika_ai_db.sqlite).
+* The database file will be created at the path specified by SQLITE_DB_PATH in your .env file (defaults to fika_ai_db.sqlite).
 
-    # Running the Application
+### Running the Application
 
-       - Start your ngrok tunnel (in a separate terminal):
+* Start your ngrok tunnel (in a separate terminal):
 ```bash
-            ngrok http 3000
+ngrok http 3000
 ```
-            Keep this terminal window open. Note the Forwarding HTTPS URL (e.g., https://xxxxxx.ngrok-free.app). You'll need this for Slack configuration.
+   * Keep this terminal window open. Note the Forwarding HTTPS URL (e.g., https://xxxxxx.ngrok-free.app). You'll need this for Slack configuration.
 
-        - Build and run the FikaDevBot application using Docker Compose: Open a new terminal window in your project's root directory (fika-ai-mvp_2/) and execute:
+   * Build and run the FikaDevBot application using Docker Compose: Open a new terminal window in your project's root directory (fika-ai-mvp_2/) and execute:
 ```bash
-                docker compose up --build
+docker compose up --build
 ``` 
-                - This command will: 
-                * Build the Docker image for your fikadevbot_app service based on the Dockerfile. 
-                * Create and start the fikadevbot_app container. 
-                * Mount your local project code into the container, allowing for real-time code changes during development without rebuilding the image. 
-                * Load environment variables from your .env file into the container. 
-                * Execute main.py inside the container. This script will automatically: 
-                        * Load environment variables. 
-                        * Run the seed_fake_commits() function, populating your SQLite database with sample GitHub events for immediate demo purposes. 
-                        * Start the Slack bot server, listening on port 3000 within the container. Keep this terminal window open and running while you are interacting with the bot.
-        - To stop the application: In the terminal where docker compose up is running, simply press Ctrl+C. Docker Compose will gracefully shut down the container. If you want to stop the container and remove associated networks (useful for a clean restart, but preserves the Docker image and any persistent volume data):
+   * This command will: 
+     * Build the Docker image for your fikadevbot_app service based on the Dockerfile. 
+     * Create and start the fikadevbot_app container. 
+     * Mount your local project code into the container, allowing for real-time code changes during development without rebuilding the image. 
+     * Load environment variables from your .env file into the container. 
+     * Execute main.py inside the container. This script will automatically: 
+       * Load environment variables. 
+       * Run the seed_fake_commits() function, populating your SQLite database with sample GitHub events for immediate demo purposes. 
+       * Start the Slack bot server, listening on port 3000 within the container. Keep this terminal window open and running while you are interacting with the bot.
+     * To stop the application:
+        * In the terminal where docker compose up is running, simply press Ctrl+C. Docker Compose will gracefully shut down the container.
+        * If you want to stop the container and remove associated networks (useful for a clean restart, but preserves the Docker image and any persistent volume data):
+       
 ```bash
-                docker compose down
+docker compose down
 ```
-Apply to README.m
 
-
-       -  Run the main application:
+   * Run the main application:
+     
 ```bash
-            python main.py
+python main.py
 ```
-            This will load environment variables, run the optional seed data, execute the LangGraph once in demo mode, and start the Slack bot server on port 3000. Keep this terminal window open.
+   * This will load environment variables, run the optional seed data, execute the LangGraph once in demo mode, and start the Slack bot server on port 3000. Keep this terminal window open.
+---
+### Slack App Configuration
 
-    # Slack App Configuration
+   You need to create and configure a Slack App to allow your bot to interact with your workspace.
 
-        You need to create and configure a Slack App to allow your bot to interact with your workspace.
+   * Create a New Slack App:
+     * Go to api.slack.com/apps and click "Create New App".
+     * Choose "From scratch".
+     * Give your App a Name (e.g., FikaDevBot) and select your development Slack Workspace.
+     * Click "Create App".
 
-            - Create a New Slack App:
-                    - Go to api.slack.com/apps and click "Create New App".
-                    - Choose "From scratch".
-                    - Give your App a Name (e.g., FikaDevBot) and select your development Slack Workspace.
-                    - Click "Create App".
+   * Add Bot Token Scopes:
+     * In the left sidebar, navigate to "OAuth & Permissions".
+     * Under "Bot Token Scopes", click "Add an OAuth Scope" and add the following:
+     * commands
+     * chat:write
+     * files:write (if charts are generated and uploaded)
+     * app_mentions:read (if you want the bot to respond to mentions)
+     * channels:history (if you want the bot to read messages)
+     * At the top of the page, click "Install to Workspace" (or "Reinstall to Workspace" if you're updating scopes) and "Allow".
+     * Copy the "Bot User OAuth Token" (starts with xoxb-). Paste this into your .env file as SLACK_BOT_TOKEN.
 
-            - Add Bot Token Scopes:
-                    - In the left sidebar, navigate to "OAuth & Permissions".
-                    - Under "Bot Token Scopes", click "Add an OAuth Scope" and add the following:
-                            - commands
-                            - chat:write
-                            - files:write (if charts are generated and uploaded)
-                            - app_mentions:read (if you want the bot to respond to mentions)
-                            - channels:history (if you want the bot to read messages)
-                    - At the top of the page, click "Install to Workspace" (or "Reinstall to Workspace" if you're updating scopes) and "Allow".
-                    - Copy the "Bot User OAuth Token" (starts with xoxb-). Paste this into your .env file as SLACK_BOT_TOKEN.
+   * Get Signing Secret:
+     - In the left sidebar, navigate to "Basic Information".
+     - Scroll down to "App Credentials".
+     - Next to "Signing Secret", click "Show" and copy the value. Paste this into your .env file as SLACK_SIGNING_SECRET.
 
-            - Get Signing Secret:
-                    - In the left sidebar, navigate to "Basic Information".
-                    - Scroll down to "App Credentials".
-                    - Next to "Signing Secret", click "Show" and copy the value. Paste this into your .env file as SLACK_SIGNING_SECRET.
+   - Configure Slash Command:
+     - In the left sidebar, navigate to "Slash Commands".
+     - Click "Create New Command".
+     - Command: /dev-report
+     - Request URL: This is crucial. Use your ngrok HTTPS forwarding URL followed by /slack/events.
+       - Example: https://abcd1234.ngrok-free.app/slack/events (Replace abcd1234.ngrok-free.app with your actual ngrok URL).
+     - Short Description: Get weekly dev insight report
+     - Usage Hint (Optional): /dev-report
+     - Click "Save".
 
-            - Configure Slash Command:
-                    - In the left sidebar, navigate to "Slash Commands".
-                    - Click "Create New Command".
-                    - Command: /dev-report
-                    - Request URL: This is crucial. Use your ngrok HTTPS forwarding URL followed by /slack/events.
-                            - Example: https://abcd1234.ngrok-free.app/slack/events (Replace abcd1234.ngrok-free.app with your actual ngrok URL).
-                    - Short Description: Get weekly dev insight report
-                    - Usage Hint (Optional): /dev-report
-                    - Click "Save".
-
-    # Restart your Python app after updating .env file.
+### Restart your Python app after updating .env file.
 
 ---
 
@@ -305,7 +309,7 @@ Apply to README.m
     └── README.md                     # This project's main documentation file.
 
 ```
-## Usage and Expected Output
+## Usage 
 
 Once your application is running and your Slack App is configured:
 
@@ -322,18 +326,16 @@ After processing the GitHub data through its AI agents, FikaDevBot will post a c
     *   **Risk Assessment:** Flags potential defect risks based on code change patterns and spikes.
     *   **Actionable Takeaways:** Recommendations for improvement derived from the analysis.
 *   **Code Churn Chart:** An attached PNG image (e.g., `churn_report.png`) visually representing code additions and deletions per commit, with annotations for significant churn spikes. This chart provides a quick visual understanding of recent development activity.
+  
+---
+## Expected Output
 
 **Example Report Snippet (AI-Generated Text):**
-```
-Based on the latest analysis, our Lead Time for Changes stands at X hours, with a Deployment Frequency of Y. The Change Failure Rate is currently Z%. Total code churn for the period was A lines (B additions, C deletions), with [Most Churn Author] contributing significantly to the churn. We've identified X commits with large code changes, indicating potential areas for more granular reviews or refactoring.
 
-In conclusion, while we've made progress in reducing defects, there is room for improvement in deployment frequency and lead time. Additionally, managing code churn, especially by [Most Churn Author], should be a priority to ensure maintainable and readable code.
-Best Regards,
-[Your Name]
-[Your Position]
-```
+ ![Screenshot (133)](https://github.com/user-attachments/assets/56eb964e-7b42-41d8-8ab1-68fe716fe7f4)
 
-The combination of the AI-narrated report and the visual chart provides a holistic view of the team's engineering productivity, enabling data-driven discussions and continuous improvement initiatives.
+
+   * The combination of the AI-narrated report and the visual chart provides a holistic view of the team's engineering productivity, enabling data-driven discussions and continuous improvement initiatives.
 
 ---
 ## Contributing
